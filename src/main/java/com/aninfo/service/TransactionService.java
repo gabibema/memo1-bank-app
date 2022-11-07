@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
@@ -18,7 +20,7 @@ public class TransactionService {
 
     @Autowired
     private AccountService accountService;
-    
+
     @Autowired
     private TransactionRepository transactionRepository;
 
@@ -49,9 +51,19 @@ public class TransactionService {
         }
         return sum;
     }
-    
+
     public Collection<Transaction> getTransactions(long cbu) {
         return transactionRepository.getTransactionsByCbu(cbu);
     }
+
+    public Optional<Transaction> getTransaction(Long transactionId){
+        return transactionRepository.getTransactionById(transactionId);
+    }
+
+    public void deleteTransaction(Long transactionId){
+
+        transactionRepository.deleteById(transactionId);
+    }
+
 
 }

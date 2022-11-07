@@ -29,9 +29,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Memo1BankApp {
 
-    	@Autowired
+	@Autowired
 	private AccountService accountService;
-    
+
 	@Autowired
 	private TransactionService transactionService;
 
@@ -88,12 +88,24 @@ public class Memo1BankApp {
 		return transactionService.getTransactions(cbu);
 	}
 
+	@GetMapping("/transactions/{transactionId}")
+	public ResponseEntity<Transaction> getTransaction(@PathVariable Long transactionId){
+		Optional<Transaction> optionalTransaction = accountService.getTransaction(transactionId);
+
+		return ResponseEntity.of(optionalTransaction);
+	}
+
+	@DeleteMapping("/transactions/{transactionId}")
+	public void deleteTransaction(@PathVariable Long transactionId){
+		accountService.deleteTransaction(transactionId);
+	}
+
 	@Bean
 	public Docket apiDocket() {
 		return new Docket(DocumentationType.SWAGGER_2)
-			.select()
-			.apis(RequestHandlerSelectors.any())
-			.paths(PathSelectors.any())
-			.build();
+				.select()
+				.apis(RequestHandlerSelectors.any())
+				.paths(PathSelectors.any())
+				.build();
 	}
 }

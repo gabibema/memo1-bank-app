@@ -2,7 +2,9 @@ package com.aninfo.service;
 
 import com.aninfo.exceptions.DepositNegativeSumException;
 import com.aninfo.exceptions.InsufficientFundsException;
+import com.aninfo.exceptions.InvalidTransactionTypeException;
 import com.aninfo.model.Account;
+import com.aninfo.model.Transaction;
 import com.aninfo.model.TransactionType;
 import com.aninfo.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,4 +66,23 @@ public class AccountService {
         return account;
     }
 
+    public Optional<Transaction> getTransaction(Long transactionId) {
+        return transactionService.getTransaction(transactionId);
+    }
+
+    public void deleteTransaction(Long transactionId) {
+        Transaction transaction = transactionService.getTransaction(transactionId).get();
+        Account account = accountRepository.findAccountByCbu(transaction.getCbu());
+
+        Double newBalance = account.getBalance() - transaction.getSum();
+        if (newBalance < 0) {
+            throw new InvalidTransactionTypeException("Cannot delete transaction");
+        }
+
+        account.setBalance(newBalance);
+        accountRepository.save(account);
+
+        transactionService.deleteTransaction(transactionId);
+
+    }
 }
