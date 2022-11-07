@@ -82,12 +82,6 @@ public class Memo1BankApp {
 	public Account deposit(@PathVariable Long cbu, @RequestParam Double sum) {
 		return accountService.deposit(cbu, sum);
 	}
-        
-        @PostMapping("/accounts/{cbu}/transactions")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Transaction createTransaction(@RequestBody Transaction transaction) {
-		return transactionService.createTransaction(transaction);
-	}
 
 	@GetMapping("/accounts/{cbu}/transactions")
 	public Collection<Transaction> getTransactions(@PathVariable Long cbu) {
